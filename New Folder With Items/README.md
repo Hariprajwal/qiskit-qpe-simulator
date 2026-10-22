@@ -57,38 +57,40 @@ quantum-phase-estimation/
 
 ---
 
-## 💻 macOS Quickstart & Setup Guide
+## 💻 Quickstart & Setup Guide
 
-### 1. Prerequisites
-Ensure Homebrew and Python 3.11 are installed on your MacBook:
-```bash
-brew install python@3.11
+### 🚀 Windows (1-Click Launch)
+Simply double-click **`run.bat`** in File Explorer, or run in PowerShell:
+```powershell
+.\run.ps1
 ```
+The script will automatically configure the virtual environment, install dependencies, and launch the web dashboard at `http://localhost:8501`.
 
-### 2. Create and Activate Virtual Environment
-```bash
-cd /Users/bakkeshymr/Freelance/Project4
-python3.11 -m venv venv
-source venv/bin/activate
-```
+### 🐧 Cross-Platform / macOS Manual Setup
+1. **Create and Activate Virtual Environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate       # On macOS / Linux
+   # .\venv\Scripts\activate      # On Windows
+   ```
 
-### 3. Install Dependencies
-```bash
-pip install --upgrade pip setuptools wheel
-pip install -r requirements.txt
-```
+2. **Install Dependencies**:
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
 
-### 4. Run Automated Unit Tests
-Verify all 14 tests covering exact phases, non-dyadic scaling, inverse QFT unitary equivalence, and noise models:
-```bash
-pytest tests/test_qpe.py -v
-```
+3. **Run Automated Unit Tests**:
+   Verify all 14 tests covering exact dyadic phases, non-dyadic scaling, inverse QFT unitary equivalence, and noise models:
+   ```bash
+   pytest tests/test_qpe.py -v
+   ```
 
-### 5. Launch the Streamlit Dashboard
-```bash
-streamlit run app.py
-```
-The application will launch automatically in your browser at `http://localhost:8501`.
+4. **Launch the Streamlit Dashboard**:
+   ```bash
+   streamlit run app.py
+   ```
+   The application will launch automatically in your browser at `http://localhost:8501`.
 
 ---
 
