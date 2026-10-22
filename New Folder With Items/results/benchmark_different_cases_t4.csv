@@ -1,0 +1,7 @@
+Case Name,Fraction,Category,Actual θ,Estimated θ,Measured Bitstring,Absolute Error,Success Probability,Entropy (bits),Exact Dyadic
+Phase θ = 1/2,1/2,Exact (Dyadic),0.5,0.5,1000,0.000000,100.00%,0.000,Yes
+Phase θ = 1/4,1/4,Exact (Dyadic),0.25,0.25,0100,0.000000,100.00%,0.000,Yes
+Phase θ = 1/8,1/8,Exact (Dyadic),0.125,0.125,0010,0.000000,100.00%,0.000,Yes
+Phase θ = 3/8,3/8,Exact (Dyadic),0.375,0.375,0110,0.000000,100.00%,0.000,Yes
+Phase θ = 1/3,1/3,Approximate (Non-dyadic),0.33333,0.3125,0101,0.020833,70.02%,1.581,No
+Phase θ = 1/5,1/5,Approximate (Non-dyadic),0.2,0.1875,0011,0.012500,89.01%,0.791,No

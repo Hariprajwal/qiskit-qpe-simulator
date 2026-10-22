@@ -1,0 +1,66 @@
+# ==========================================
+# Git Ignore - Quantum Computing Academic Project
+# ==========================================
+
+# 1. Virtual Environments & Packages
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+*/venv/
+*/.venv/
+
+# 2. Sensitive Files, Secrets & API Keys
+.env
+.env.*
+!.env.example
+secrets.toml
+.streamlit/secrets.toml
+*.pem
+*.key
+*.cer
+*.crt
+*.pfx
+*.p12
+credentials.json
+client_secrets.json
+
+# 3. Python Bytecode, Compilations & Caches
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# 4. Logs, Runtime & Debug Output
+*.log
+*.sqlite3
+streamlit.log
+debug.log
+
+# 5. OS Generated Junk
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+__MACOSX/
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# 6. IDE & Editor Artifacts
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
