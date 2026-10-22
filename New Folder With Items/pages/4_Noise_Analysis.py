@@ -160,7 +160,7 @@ with col_ch1:
 
 with col_ch2:
     st.markdown("#### Detailed Benchmark Comparison Table")
-    st.dataframe(df_comp, use_container_width=True)
+    st.dataframe(df_comp, width="stretch")
     
     csv_bytes = df_comp.to_csv(index=False).encode("utf-8")
     st.download_button(

@@ -198,7 +198,7 @@ with tab_table:
             "Absolute Error": f"{s.absolute_error:.6f}"
         })
     df_table = pd.DataFrame(table_data)
-    st.dataframe(df_table, use_container_width=True)
+    st.dataframe(df_table, width="stretch")
 
     # Download CSV
     csv_bytes = df_table.to_csv(index=False).encode("utf-8")
@@ -213,7 +213,7 @@ with tab_history:
     st.markdown("### Current Session Experiment History")
     df_hist = get_history_dataframe()
     if not df_hist.empty:
-        st.dataframe(df_hist, use_container_width=True)
+        st.dataframe(df_hist, width="stretch")
         csv_hist = df_hist.to_csv(index=False).encode("utf-8")
         st.download_button(
             label="📥 Download Session History (CSV)",

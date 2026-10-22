@@ -64,7 +64,7 @@ with st.spinner("Simulating QPE across precision spectrum..."):
     )
 
 st.markdown("### 📊 Precision Scaling Data Table")
-st.dataframe(df_scaling, use_container_width=True)
+st.dataframe(df_scaling, width="stretch")
 
 csv_scaling = df_scaling.to_csv(index=False).encode("utf-8")
 st.download_button(

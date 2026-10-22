@@ -65,7 +65,7 @@ with st.spinner("Executing QPE across all target cases..."):
     )
 
 st.markdown("### 📋 Multi-Case Comparative Summary Table")
-st.dataframe(df_cases, use_container_width=True)
+st.dataframe(df_cases, width="stretch")
 
 # CSV Export
 csv_data = df_cases.to_csv(index=False).encode("utf-8")

@@ -2,6 +2,7 @@ qiskit>=1.0.0
 qiskit-aer>=0.14.0
 numpy>=1.24.0,<2.0.0
 pyarrow<19
+pylatexenc>=2.10
 matplotlib>=3.7.0
 pandas>=2.0.0
 streamlit>=1.30.0
