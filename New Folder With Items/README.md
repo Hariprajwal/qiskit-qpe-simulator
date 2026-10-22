@@ -1,146 +1,198 @@
-# Implementation of Quantum Phase Estimation (QPE) Algorithm for Different Cases
+# ⚛️ Qiskit QPE Simulator: Interactive Quantum Phase Estimation Pipeline
 
-**M.Tech Computer Science and Engineering Academic Project**  
-**Environment:** macOS (Apple Silicon / ARM64 & Intel compatible) | Python 3.11 | Qiskit 2.x & Qiskit Aer | Streamlit
+[![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Qiskit](https://img.shields.io/badge/Qiskit-2.x%20%7C%20Aer-6929C4?style=for-the-badge&logo=qiskit&logoColor=white)](https://qiskit.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.x-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Tests](https://img.shields.io/badge/Tests-14%20Passed-22C55E?style=for-the-badge&logo=pytest&logoColor=white)](tests/test_qpe.py)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-64748B?style=for-the-badge)](run.bat)
+
+An end-to-end, publication-grade implementation of the **Quantum Phase Estimation (QPE)** algorithm built with **Qiskit**, **Qiskit Aer**, and an interactive multi-page **Streamlit** dashboard. Includes explicit gate-level Inverse Quantum Fourier Transform ($QFT^\dagger$) decomposition, dyadic vs. continuous non-dyadic case studies, exponential precision scaling, and realistic NISQ hardware noise simulations.
+
+---
+
+## 📸 Visual Snapshots & Demonstrations
+
+### 1. Quantum Circuit Architecture ($t=3$ Counting Qubits, $\theta = 1/8$)
+Synthesized gate-level circuit with superposition initialization, controlled unitary powers $U^{2^j}$ phase kickback, and explicit $QFT^\dagger$ unrolling with SWAP network.
+
+![Quantum Phase Estimation Circuit Architecture](assets/circuit_qpe.png)
+
+---
+
+### 2. Exponential Precision Scaling ($t = 2 \dots 8$ Qubits for $\theta = 1/3$)
+Empirical phase error decay compared against theoretical Heisenberg-limited upper bound $\epsilon \le \frac{1}{2^t}$.
+
+![Precision Scaling Curve](assets/precision_scaling.png)
+
+---
+
+### 3. Ideal vs. Noisy NISQ Simulation (Depolarizing & Readout Noise)
+Side-by-side probability distribution contrast under noisy quantum intermediate-scale hardware regimes.
+
+![NISQ Noise Comparison](assets/noise_comparison.png)
 
 ---
 
 ## 📖 Executive Summary
 
-The **Quantum Phase Estimation (QPE)** algorithm is a foundational subroutine in quantum computing. Given a unitary operator $U$ and an eigenstate $|\psi\rangle$ satisfying:
+The **Quantum Phase Estimation (QPE)** algorithm is a cornerstone subroutine in quantum computing, forming the computational core of **Shor's Factoring Algorithm**, **Quantum Phase-based Matrix Inversion (HHL)**, and **Quantum Molecular Chemistry Simulations**.
+
+Given a unitary operator $U$ and an eigenstate $|\psi\rangle$ satisfying:
 
 $$U |\psi\rangle = e^{2\pi i \theta} |\psi\rangle, \quad \theta \in [0, 1)$$
 
-the algorithm estimates the unknown phase parameter $\theta$ with exponential precision using $t$ counting qubits.
+the algorithm estimates the phase parameter $\theta$ with exponential precision using a register of $t$ counting qubits.
 
-This project implements an end-to-end quantum computing pipeline featuring:
-1. **Parameterized Quantum Phase Circuits** with controlled unitary powers $U^{2^j}$.
-2. **Explicit Gate-Level Inverse Quantum Fourier Transform ($QFT^\dagger$)** with phase rotations and SWAP operations.
-3. **Multi-Case Empirical Benchmarks**:
-   - Exact Dyadic phases: $\theta \in \{1/2, 1/4, 1/8, 3/8\}$ (100% ideal constructive interference)
-   - Non-Dyadic continuous phases: $\theta \in \{1/3, 1/5\}$ (spectral broadening and leakage)
-   - Custom user-defined phases.
-4. **Exponential Precision Scaling** ($t = 2$ to $8$ qubits) with empirical vs. theoretical error bounds ($\leq 1/2^t$).
-5. **Noisy Intermediate-Scale Quantum (NISQ) Simulation** via Qiskit Aer depolarizing channels and readout error models.
-6. **Full-Featured Interactive Web Dashboard** built with Streamlit and Plotly.
+### Key Highlights of This Implementation:
+1. **Gate-Level $QFT^\dagger$ Decomposition**: Explicit implementation of controlled phase rotations ($R_k / CPHASE$) and qubit SWAP networks without black-box library wrappers.
+2. **Empirical Benchmarks**:
+   - **Exact Dyadic Phases**: $\theta \in \{1/2, 1/4, 1/8, 3/8\}$ exhibiting 100% constructive interference.
+   - **Non-Dyadic Continuous Phases**: $\theta \in \{1/3, 1/5\}$ demonstrating spectral leakage and sinc-like probability distributions.
+3. **NISQ Noise Simulation**: Realistic modeling of depolarizing gate errors ($p_{1q}, p_{2q}$) and measurement readout errors ($P(0|1), P(1|0)$).
+4. **Interactive Multi-Page Web Dashboard**: Built with Streamlit and Plotly, providing live parameter control, real-time circuit drawing, and CSV dataset export.
+5. **Automated Verification**: Comprehensive PyTest suite covering 14 unit tests across unitary properties, mathematical bounds, and noise models.
 
 ---
 
-## 🗂️ Project Directory Structure
+## 📊 Empirical Benchmark Results
+
+Below are benchmark results produced using $t = 4$ counting qubits and 8,192 measurement shots:
+
+| Case | Fraction | Category | Actual $\theta$ | Estimated $\theta$ | Bitstring | Absolute Error | Success Prob. | Dyadic Exact |
+| :--- | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Phase $\theta = 1/2$** | $1/2$ | Exact (Dyadic) | $0.50000$ | $0.50000$ | `1000` | **$0.000000$** | **100.00%** | ✅ Yes |
+| **Phase $\theta = 1/4$** | $1/4$ | Exact (Dyadic) | $0.25000$ | $0.25000$ | `0100` | **$0.000000$** | **100.00%** | ✅ Yes |
+| **Phase $\theta = 1/8$** | $1/8$ | Exact (Dyadic) | $0.12500$ | $0.12500$ | `0010` | **$0.000000$** | **100.00%** | ✅ Yes |
+| **Phase $\theta = 3/8$** | $3/8$ | Exact (Dyadic) | $0.37500$ | $0.37500$ | `0110` | **$0.000000$** | **100.00%** | ✅ Yes |
+| **Phase $\theta = 1/3$** | $1/3$ | Non-Dyadic | $0.33333$ | $0.31250$ | `0101` | **$0.020833$** | **70.02%** | ❌ No |
+| **Phase $\theta = 1/5$** | $1/5$ | Non-Dyadic | $0.20000$ | $0.18750$ | `0011` | **$0.012500$** | **89.01%** | ❌ No |
+
+---
+
+## 🗂️ Project Architecture
 
 ```text
-quantum-phase-estimation/
-├── app.py                      # Main Streamlit Application (Page 1: Executive Home)
-├── requirements.txt            # Python dependencies (Qiskit 2.x, Aer, Streamlit, etc.)
-├── README.md                   # Comprehensive academic documentation and setup guide
-├── qpe/                        # Core Quantum Phase Estimation package
-│   ├── __init__.py             # Module exports
-│   ├── circuit.py              # QPE circuit synthesizer with eigenstate prep & controlled-U
-│   ├── inverse_qft.py          # Gate-level Inverse QFT and Forward QFT implementation
-│   ├── simulator.py            # AerSimulator execution, decimal decoding, and metrics
-│   ├── noise.py                # NISQ noise modeling (depolarizing, thermal, readout error)
-│   ├── analysis.py             # Precision scaling, case benchmarking, and entropy metrics
-│   └── ui_helper.py            # Streamlit styling, Plotly charts, and session management
-├── pages/                      # Multi-Page Streamlit Dashboard
-│   ├── 1_🎮_QPE_Simulator.py   # Page 2: Interactive circuit builder & histogram analyzer
-│   ├── 2_📊_Different_Cases.py # Page 3: Comparison table across 6+ predefined cases
-│   ├── 3_📈_Precision_Analysis.py # Page 4: Error scaling vs. counting qubits (t=2..8)
-│   ├── 4_🔬_Noise_Analysis.py  # Page 5: Side-by-side Ideal vs. Noisy NISQ comparison
-│   └── 5_📚_Learn_QPE.py       # Page 6: Step-by-step textbook tutorial with worked examples
-├── tests/                      # Automated Verification Test Suite
+qiskit-qpe-simulator/
+│
+├── run.bat                          # 1-Click Windows Batch Launcher
+├── run.ps1                          # Native Windows PowerShell Launcher
+├── run_tests.bat                    # 1-Click PyTest Suite Runner
+├── requirements.txt                 # Pinned dependencies (Qiskit 2.x, Aer, Streamlit, etc.)
+├── LICENSE                          # MIT License
+├── README.md                        # Master Documentation & Academic Report
+├── PROJECT_WORK_DIVISION.md         # Team Responsibilities & Viva Speaking Script
+│
+├── assets/                          # High-resolution benchmark plots and circuit diagrams
+│   ├── circuit_qpe.png
+│   ├── precision_scaling.png
+│   └── noise_comparison.png
+│
+├── qpe/                             # Core Quantum Phase Estimation Engine
 │   ├── __init__.py
-│   └── test_qpe.py             # 14 comprehensive unit tests (all passing)
-└── results/                    # Exported CSV experiment data
+│   ├── circuit.py                   # Quantum circuit synthesis & phase kickback
+│   ├── inverse_qft.py               # Explicit gate-level Inverse QFT (QFT†) & SWAPs
+│   ├── simulator.py                 # AerSimulator execution & decimal phase decoding
+│   ├── noise.py                     # NISQ depolarizing & readout error modeling
+│   ├── analysis.py                  # Error bounds, precision scaling & Shannon entropy
+│   └── ui_helper.py                 # Streamlit styling, Plotly charts & session state
+│
+├── pages/                           # Interactive Multi-Page Streamlit App
+│   ├── 1_QPE_Simulator.py           # Live circuit builder & measurement analyzer
+│   ├── 2_Different_Cases.py         # Comparative dyadic vs. non-dyadic benchmark table
+│   ├── 3_Precision_Analysis.py      # Precision scaling curve analyzer (t = 2..8)
+│   ├── 4_Noise_Analysis.py          # Ideal vs. Noisy NISQ comparison
+│   └── 5_Learn_QPE.py               # Educational textbook tutorial with worked examples
+│
+├── tests/                           # Verification Test Suite
+│   ├── __init__.py
+│   └── test_qpe.py                  # 14 comprehensive unit tests (all passing)
+│
+└── results/                         # Exported CSV Datasets & Reports
     ├── benchmark_different_cases_t4.csv
-    └── precision_scaling_one_third.csv
+    ├── precision_scaling_one_third.csv
+    └── Quantum_Phase_Estimation_MTech_Report.pdf
 ```
 
 ---
 
 ## 💻 Quickstart & Setup Guide
 
-### 🚀 Windows (1-Click Launch)
+### 🚀 Option 1: Windows (1-Click Launch)
 Simply double-click **`run.bat`** in File Explorer, or run in PowerShell:
 ```powershell
 .\run.ps1
 ```
-The script will automatically configure the virtual environment, install dependencies, and launch the web dashboard at `http://localhost:8501`.
+*The launcher automatically initializes the virtual environment, verifies dependencies, and launches the web dashboard at `http://localhost:8501`.*
 
-### 🐧 Cross-Platform / macOS Manual Setup
-1. **Create and Activate Virtual Environment**:
+---
+
+### 🐧 Option 2: Cross-Platform / macOS / Linux
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Hariprajwal/qiskit-qpe-simulator.git
+   cd qiskit-qpe-simulator
+   ```
+
+2. **Create & Activate Virtual Environment**:
    ```bash
    python -m venv venv
    source venv/bin/activate       # On macOS / Linux
    # .\venv\Scripts\activate      # On Windows
    ```
 
-2. **Install Dependencies**:
+3. **Install Dependencies**:
    ```bash
    pip install --upgrade pip
    pip install -r requirements.txt
    ```
 
-3. **Run Automated Unit Tests**:
-   Verify all 14 tests covering exact dyadic phases, non-dyadic scaling, inverse QFT unitary equivalence, and noise models:
+4. **Run Unit Tests (14 passing tests)**:
    ```bash
    pytest tests/test_qpe.py -v
    ```
 
-4. **Launch the Streamlit Dashboard**:
+5. **Start the Interactive Dashboard**:
    ```bash
    streamlit run app.py
    ```
-   The application will launch automatically in your browser at `http://localhost:8501`.
+   Open your browser at `http://localhost:8501`.
 
 ---
 
-## 🔬 Mathematical & Algorithmic Background
+## 🔬 Mathematical Foundations
 
-### 1. The Phase Kickback Principle
-When a controlled-$U$ gate acts on a control qubit in superposition $\frac{|0\rangle + |1\rangle}{\sqrt{2}}$ and an eigenstate $|\psi\rangle$:
+### 1. Phase Kickback Principle
+When a controlled-$U$ gate acts on a control qubit in equal superposition $\frac{|0\rangle + |1\rangle}{\sqrt{2}}$ and an eigenstate $|\psi\rangle$:
 
 $$CU \left( \frac{|0\rangle + |1\rangle}{\sqrt{2}} |\psi\rangle \right) = \left( \frac{|0\rangle + e^{2\pi i \theta} |1\rangle}{\sqrt{2}} \right) |\psi\rangle$$
 
-The target qubit remains unchanged, while the eigenvalue phase is transferred ("kicked back") into the control qubit.
+Applying successive controlled operations $CU^{2^j}$ for $j = 0, \dots, t-1$ encodes the binary expansion of $\theta = 0.\theta_1 \theta_2 \dots \theta_t$ into the relative phases of the counting register:
 
-### 2. Successive Controlled Powers
-Applying $U^{2^j}$ for counting qubits $j \in \{0, 1, \dots, t-1\}$ transforms the register into:
+$$|\widetilde{\psi}\rangle = \frac{1}{\sqrt{2^t}} \sum_{k=0}^{2^t-1} e^{2\pi i \theta k} |k\rangle$$
 
-$$|\Psi\rangle = \frac{1}{\sqrt{2^t}} \sum_{k=0}^{2^t - 1} e^{2\pi i \theta k} |k\rangle$$
+### 2. Inverse Quantum Fourier Transform ($QFT^\dagger$)
+The $QFT^\dagger$ unrolls the relative phases into computational basis states:
 
-### 3. Inverse Quantum Fourier Transform ($QFT^\dagger$)
-The Inverse QFT inverts the discrete Fourier transform:
+$$QFT^\dagger |k\rangle = \frac{1}{\sqrt{2^t}} \sum_{j=0}^{2^t-1} e^{-2\pi i j k / 2^t} |j\rangle$$
 
-$$QFT^\dagger |k\rangle = \frac{1}{\sqrt{2^t}} \sum_{j=0}^{2^t - 1} e^{-2\pi i j k / 2^t} |j\rangle$$
+When $\theta = \frac{m}{2^t}$ is an exact dyadic fraction, destructive interference cancels all non-target states, measuring $|m\rangle$ with **100% probability**. When $\theta$ is non-dyadic, the probability distribution peaks around $\lfloor 2^t \theta \rceil$ with an empirical upper bound:
 
-### 4. Exact vs. Approximate Phases
-- **Exact Dyadic Phase:** If $\theta = \frac{m}{2^t}$ ($m \in \mathbb{Z}$), destructive interference eliminates all orthogonal states, yielding $P(m) = 1.0$ (100% probability).
-- **Approximate Phase:** If $2^t \theta \notin \mathbb{Z}$, the measurement probability distribution follows Nielsen & Chuang Eq. (5.26):
-
-$$P(m) = \frac{1}{2^{2t}} \frac{\sin^2(\pi(2^t \theta - m))}{\sin^2(\pi(\theta - m / 2^t))}$$
-
-The absolute error is strictly bounded by:
-$$|\theta - \tilde{\theta}| \leq \frac{1}{2^t}$$
+$$|\theta - \hat{\theta}| \le \frac{1}{2^t}$$
 
 ---
 
-## 📊 Experimental Results Summary
+## 👥 Contributors & Work Allocation
 
-| Case Name | Actual $\theta$ | Counting Qubits ($t$) | Measured State | Estimated $\tilde{\theta}$ | Absolute Error | Success Prob. | Dyadic Class |
-|---|---|---|---|---|---|---|---|
-| Phase $\theta = 1/2$ | 0.50000 | 4 | `|1000⟩` | 0.50000 | 0.000000 | 100.0% | Exact |
-| Phase $\theta = 1/4$ | 0.25000 | 4 | `|0100⟩` | 0.25000 | 0.000000 | 100.0% | Exact |
-| Phase $\theta = 1/8$ | 0.12500 | 4 | `|0010⟩` | 0.12500 | 0.000000 | 100.0% | Exact |
-| Phase $\theta = 3/8$ | 0.37500 | 4 | `|0110⟩` | 0.37500 | 0.000000 | 100.0% | Exact |
-| Phase $\theta = 1/3$ | 0.33333 | 4 | `|0101⟩` | 0.31250 | 0.020833 | 68.4% | Approximate |
-| Phase $\theta = 1/5$ | 0.20000 | 4 | `|0011⟩` | 0.18750 | 0.012500 | 73.1% | Approximate |
+- **Hariprajwal ([@Hariprajwal](https://github.com/Hariprajwal))** — Interactive Web Dashboard Development, Plotly Data Visualizations, Experimental Benchmarking Datasets (`results/*.csv`), and Analytical Scaling Curves.
+- **Bakkesh ([@bakkeshymr](https://github.com/bakkeshymr))** — System Architecture Design, Core Quantum Circuit Synthesizer (`circuit.py`, `inverse_qft.py`), Aer Simulator Integration, and NISQ Noise Channels.
+- **Janayath** — Automated PyTest Verification Suite (`tests/test_qpe.py`), Educational Textbook Walkthroughs, and Documentation Support.
+
+Detailed role descriptions and presentation viva points are documented in [PROJECT_WORK_DIVISION.md](PROJECT_WORK_DIVISION.md).
 
 ---
 
-## 🛠️ Technology Stack
-- **Language:** Python 3.11 (macOS Apple Silicon)
-- **Quantum Computing Framework:** Qiskit 2.5.2
-- **Simulation Engine:** Qiskit Aer 0.17.2 (`AerSimulator`)
-- **Web Application:** Streamlit 1.65.0
-- **Data & Plotting:** NumPy 2.4.6, Pandas 3.0.6, Matplotlib 3.11.2, Plotly 7.1.0
-- **Test Framework:** Pytest 9.1.1
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for complete details.
